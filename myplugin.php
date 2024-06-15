@@ -10,6 +10,8 @@
 
 // Add your code here
 
+include plugin_dir_path(__FILE__) . 'controllers/update.php';
+
 function adminAssets()
 {
     wp_enqueue_script('myplugin-backend', plugins_url('js/backend.bundle.js', __FILE__), array('jquery'), '1.0', 'defer');
@@ -29,6 +31,8 @@ function assets()
 
 }
 add_action('wp_enqueue_scripts', 'assets');
+
+
 
 function myplugin_add_admin_menu()
 {
