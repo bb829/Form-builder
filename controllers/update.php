@@ -1,6 +1,6 @@
 <?php
 $repository = 'bb829/myplugin';
-$token = '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'; // Replace with your personal access token
+$token = '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'; // Replace with your personal access token
 
 $args = [
     'headers' => [
@@ -23,7 +23,7 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.1'; // Update accordingly
+$current_version = '0.3.2'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
