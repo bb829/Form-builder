@@ -11,18 +11,19 @@ $args = [
 $response = wp_remote_get("https://api.github.com/repos/$repository/releases/latest", $args);
 
 if (is_wp_error($response)) {
-    // Handle the error
+    error_log($response->get_error_message());
     return;
 }
 
-$release = json_decode(wp_remote_retrieve_body($response));
+$body = wp_remote_retrieve_body($response);
+$release = json_decode($body);
 
 if (!isset($release->tag_name)) {
-    // Handle the error
+    error_log("Unexpected API response: $body");
     return;
 }
 
-$current_version = '0.2.9'; // Update accordingly
+$current_version = '0.3.0'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);

@@ -3,7 +3,7 @@
  * Plugin Name: Bos Forms
  * Plugin URI: https://bartbos.com/projects/bosForms
  * Description: A user-friendly straightforward form builder plugin
- * Version: 0.28
+ * Version: 0.3.0
  * Author: Bart Bos
  * Author URI: https://bartbos.com
  */
