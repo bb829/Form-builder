@@ -23,7 +23,7 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.0'; // Update accordingly
+$current_version = '0.3.1'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
