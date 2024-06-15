@@ -23,14 +23,16 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.2'; // Update accordingly
+$current_version = '0.3.3'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
+    error_log(print_r($release, true)); // Add this line
 }
 
 add_filter('pre_set_site_transient_update_plugins', function ($transient) {
     $release = get_transient('myplugin_update');
+    error_log(print_r($release, true)); // Add this line
 
     if ($release && isset($release->tag_name)) {
         $plugin_data = get_plugin_data(__FILE__);
@@ -42,7 +44,21 @@ add_filter('pre_set_site_transient_update_plugins', function ($transient) {
             'url' => $plugin_data['PluginURI'],
             'slug' => $plugin_slug,
         ];
+        error_log(print_r($transient, true)); // Add this line
     }
 
     return $transient;
 });
+
+add_action('upgrader_process_complete', 'myplugin_after_update', 10, 2);
+function myplugin_after_update($upgrader_object, $options) {
+    $current_plugin_path_name = plugin_basename(__FILE__);
+
+    if ($options['action'] == 'update' && $options['type'] == 'plugin' ) {
+        foreach($options['plugins'] as $each_plugin) {
+            if ($each_plugin == $current_plugin_path_name) {
+                // Perform actions here after the plugin has been updated
+            }
+        }
+    }
+}

@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Bos Forms
+ * Plugin Name: myplugin
  * Plugin URI: https://bartbos.com/projects/bosForms
  * Description: A user-friendly straightforward form builder plugin
- * Version: 0.3.2
+ * Version: 0.3.3
  * Author: Bart Bos
  * Author URI: https://bartbos.com
  */
@@ -31,8 +31,6 @@ function assets()
 
 }
 add_action('wp_enqueue_scripts', 'assets');
-
-
 
 function myplugin_add_admin_menu()
 {
