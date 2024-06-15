@@ -1,0 +1,21 @@
+@import 'variables.css';
+
+.formItem {
+    background: #f2f2f2;
+}
+
+.inputElements > div {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.tertiaryBG {
+    background: var(--myplugin-tertiary-color);
+}
+
+.inputElements > div > button {
+    aspect-ratio: 1/1;
+}
+
+.inputElements > div > button i {
+    font-size: 24px;
+}

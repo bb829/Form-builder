@@ -1,0 +1,17 @@
+@import 'variables.css';
+
+.form-error {
+    background: var(--myplugin-notification-error-background);
+    color: var(--myplugin-notification-error-color);
+    border: solid 1px var(--myplugin-notification-error-color);
+}
+
+.form-success {
+    background: var(--myplugin-notification-success-background);
+    color: var(--myplugin-notification-success-color);
+    border: solid 1px var(--myplugin-notification-success-color);
+}
+
+.border-red {
+    border: solid 1px var(--myplugin-notification-error-color) !important;
+}

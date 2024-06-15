@@ -1,0 +1,42 @@
+:root {
+    --myplugin-primary-color: #fff;
+    --myplugin-secondary-color: #000;
+    --myplugin-tertiary-color: #f2f2f2;
+    --myplugin-notification-error-color: #c00;
+    --myplugin-notification-error-background: #fff0f0;
+    --myplugin-notification-success-color: rgb(17, 204, 0);
+    --myplugin-notification-success-background: #f1fff0;
+    --myplugin-text-color: #333;
+    --myplugin-background-color: #f9f9f9;
+    --myplugin-border-color: #ddd;
+    --myplugin-border-radius: 4px;
+    --myplugin-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --myplugin-font-family: 'Helvetica Neue', sans-serif;
+    --myplugin-font-size: 16px;
+    --myplugin-line-height: 1.5;
+    --myplugin-spacing: 20px;
+    --myplugin-max-width: 1200px;
+    --myplugin-z-index: 1000;
+    --myplugin-transition: all 0.3s ease;
+    --myplugin-button-padding: 10px 20px;
+    --myplugin-button-border-radius: 4px;
+    --myplugin-button-font-size: 16px;
+    --myplugin-button-line-height: 1.5;
+    --myplugin-button-text-color: #fff;
+    --myplugin-button-background-color: var(--myplugin-primary-color);
+    --myplugin-button-border-color: var(--myplugin-primary-color);
+    --myplugin-button-hover-background-color: var(--myplugin-secondary-color);
+    --myplugin-button-hover-border-color: var(--myplugin-secondary-color);
+    --myplugin-button-active-background-color: var(--myplugin-tertiary-color);
+    --myplugin-button-active-border-color: var(--myplugin-tertiary-color);
+    --myplugin-button-focus-background-color: var(--myplugin-tertiary-color);
+    --myplugin-button-focus-border-color: var(--myplugin-tertiary-color);
+    --myplugin-button-disabled-background-color: #ccc;
+    --myplugin-button-disabled-border-color: #ccc;
+    --myplugin-button-disabled-text-color: #666;
+    --myplugin-button-disabled-cursor: not-allowed;
+    --myplugin-button-disabled-opacity: 0.5;
+    --myplugin-button-disabled-box-shadow: none;
+    --myplugin-button-disabled-hover-background-color: #ccc;
+    --myplugin-button-disabled-hover-border-color:
+}
