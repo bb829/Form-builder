@@ -1,14 +1,13 @@
 <?php
-/**
- * Plugin Name: myplugin
- * Plugin URI: https://bartbos.com/projects/bosForms
- * Description: A user-friendly straightforward form builder plugin
- * Version: 0.3.3
- * Author: Bart Bos
- * Author URI: https://bartbos.com
- */
-
-// Add your code here
+/*
+Plugin Name: My Plugin
+Plugin URI: https://bartbos.com/projects/bosForms
+Description: A user-friendly straightforward form builder plugin.
+Version: 0.3.4
+Author: Bart Bos
+Author URI: https://www.me.com
+License: GPL2
+*/
 
 include plugin_dir_path(__FILE__) . 'controllers/update.php';
 

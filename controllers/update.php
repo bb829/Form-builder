@@ -23,7 +23,7 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.3'; // Update accordingly
+$current_version = '0.3.4'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
@@ -31,20 +31,22 @@ if (version_compare($release->tag_name, $current_version, '>')) {
 }
 
 add_filter('pre_set_site_transient_update_plugins', function ($transient) {
+    $plugin_main_file_path = WP_PLUGIN_DIR . '/myplugin/myplugin.php';
     $release = get_transient('myplugin_update');
     error_log(print_r($release, true)); // Add this line
 
     if ($release && isset($release->tag_name)) {
-        $plugin_data = get_plugin_data(__FILE__);
-        $plugin_slug = plugin_basename(__FILE__);
+        $plugin_slug = 'myplugin/myplugin.php';
+        $plugin_data = get_plugin_data($plugin_main_file_path);
 
         $transient->response[$plugin_slug] = (object) [
             'new_version' => $release->tag_name,
             'package' => $release->zipball_url,
             'url' => $plugin_data['PluginURI'],
             'slug' => $plugin_slug,
+            'plugin_data' => $plugin_data,
         ];
-        error_log(print_r($transient, true)); // Add this line
+        error_log(print_r($transient, true));
     }
 
     return $transient;
