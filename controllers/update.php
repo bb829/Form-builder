@@ -23,7 +23,7 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.7'; // Update accordingly
+$current_version = '0.3.8'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
@@ -58,3 +58,24 @@ add_filter('pre_set_site_transient_update_plugins', function ($transient) {
 
     return $transient;
 });
+
+add_action('upgrader_process_complete', function ($upgrader_object, $options) {
+    if ($options['action'] == 'update' && $options['type'] == 'plugin' ) {
+        delete_transient('myplugin_update');
+        delete_transient('update_plugins'); // Add this line
+    }
+}, 10, 2);
+
+add_filter('upgrader_source_selection', function($source, $remote_source, $upgrader) {
+    global $wp_filesystem;
+
+    $plugin_dir = WP_PLUGIN_DIR . '/myplugin';
+    $corrected_source = $remote_source . '/myplugin/';
+
+    if ($upgrader->skin->options['type'] === 'plugin' && $source === $remote_source . '/bb829-myplugin-652ad808d177f6fe6324cd92f93db5ea1e4f65ca/') {
+        $wp_filesystem->move($source, $corrected_source);
+        return $corrected_source;
+    }
+
+    return $source;
+}, 10, 3);
