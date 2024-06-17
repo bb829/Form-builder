@@ -23,7 +23,7 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.83'; // Update accordingly
+$current_version = '0.3.84'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
@@ -82,3 +82,35 @@ add_filter('upgrader_source_selection', function($source, $remote_source, $upgra
 
     return $source;
 }, 10, 3);
+
+add_filter('upgrader_package_options', function($options) {
+    $package = $options['package'];
+    $tmpfname = wp_tempnam($package);
+    $response = wp_remote_get($package, array('timeout' => 300, 'stream' => true, 'filename' => $tmpfname));
+
+    if (is_wp_error($response)) {
+        unlink($tmpfname);
+        return new WP_Error('http_request_failed', __('Failed to download package.'));
+    }
+
+    if (200 != wp_remote_retrieve_response_code($response)) {
+        unlink($tmpfname);
+        return new WP_Error('http_request_failed', __('Failed to download package.'));
+    }
+
+    $zip = new ZipArchive;
+    if ($zip->open($tmpfname) === TRUE) {
+        for($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            $fileinfo = pathinfo($filename);
+            if (strpos($fileinfo['dirname'], 'bb829-myplugin-') === 0) {
+                $newname = str_replace('bb829-myplugin-', 'myplugin/', $filename);
+                $zip->renameIndex($i, $newname);
+            }
+        }
+        $zip->close();
+    }
+
+    $options['package'] = $tmpfname;
+    return $options;
+});
