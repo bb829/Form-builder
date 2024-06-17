@@ -23,7 +23,7 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.84'; // Update accordingly
+$current_version = '0.3.85'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
@@ -69,48 +69,11 @@ add_action('upgrader_process_complete', function ($upgrader_object, $options) {
 add_filter('upgrader_source_selection', function($source, $remote_source, $upgrader) {
     global $wp_filesystem;
 
-    // Check if the plugin being updated is your plugin
-    if (isset($upgrader->skin->plugin_info) && $upgrader->skin->plugin_info['Name'] === 'myplugin') {
-        $corrected_source = trailingslashit($remote_source) . 'myplugin';
-
-        // Check if the source starts with the expected string
-        if (strpos($source, trailingslashit($remote_source) . 'bb829-myplugin-') === 0) {
-            $wp_filesystem->move($source, $corrected_source);
-            return $corrected_source;
-        }
+    $corrected_source = $remote_source . '/myplugin/';
+    if ($source !== $corrected_source) {
+        $wp_filesystem->move($source, $corrected_source);
+        return $corrected_source;
     }
 
     return $source;
 }, 10, 3);
-
-add_filter('upgrader_package_options', function($options) {
-    $package = $options['package'];
-    $tmpfname = wp_tempnam($package);
-    $response = wp_remote_get($package, array('timeout' => 300, 'stream' => true, 'filename' => $tmpfname));
-
-    if (is_wp_error($response)) {
-        unlink($tmpfname);
-        return new WP_Error('http_request_failed', __('Failed to download package.'));
-    }
-
-    if (200 != wp_remote_retrieve_response_code($response)) {
-        unlink($tmpfname);
-        return new WP_Error('http_request_failed', __('Failed to download package.'));
-    }
-
-    $zip = new ZipArchive;
-    if ($zip->open($tmpfname) === TRUE) {
-        for($i = 0; $i < $zip->numFiles; $i++) {
-            $filename = $zip->getNameIndex($i);
-            $fileinfo = pathinfo($filename);
-            if (strpos($fileinfo['dirname'], 'bb829-myplugin-') === 0) {
-                $newname = str_replace('bb829-myplugin-', 'myplugin/', $filename);
-                $zip->renameIndex($i, $newname);
-            }
-        }
-        $zip->close();
-    }
-
-    $options['package'] = $tmpfname;
-    return $options;
-});
