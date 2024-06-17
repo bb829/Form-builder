@@ -23,7 +23,7 @@ if (!isset($release->tag_name)) {
     return;
 }
 
-$current_version = '0.3.82'; // Update accordingly
+$current_version = '0.3.83'; // Update accordingly
 
 if (version_compare($release->tag_name, $current_version, '>')) {
     set_transient('myplugin_update', $release, DAY_IN_SECONDS);
@@ -69,11 +69,15 @@ add_action('upgrader_process_complete', function ($upgrader_object, $options) {
 add_filter('upgrader_source_selection', function($source, $remote_source, $upgrader) {
     global $wp_filesystem;
 
-    $corrected_source = trailingslashit($remote_source) . 'myplugin';
+    // Check if the plugin being updated is your plugin
+    if (isset($upgrader->skin->plugin_info) && $upgrader->skin->plugin_info['Name'] === 'myplugin') {
+        $corrected_source = trailingslashit($remote_source) . 'myplugin';
 
-    if ($upgrader->skin->options['type'] === 'plugin' && strpos($source, trailingslashit($remote_source) . 'bb829-myplugin-') === 0) {
-        $wp_filesystem->move($source, $corrected_source);
-        return $corrected_source;
+        // Check if the source starts with the expected string
+        if (strpos($source, trailingslashit($remote_source) . 'bb829-myplugin-') === 0) {
+            $wp_filesystem->move($source, $corrected_source);
+            return $corrected_source;
+        }
     }
 
     return $source;

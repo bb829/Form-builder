@@ -3,7 +3,7 @@
 Plugin Name: My Plugin
 Plugin URI: https://bartbos.com/projects/bosForms
 Description: A user-friendly straightforward form builder plugin.
-Version: 0.3.82
+Version: 0.3.83
 Author: Bart Bos
 Author URI: https://www.me.com
 License: GPL2
