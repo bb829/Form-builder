@@ -3,73 +3,13 @@
 Plugin Name: My Plugin
 Plugin URI: https://bartbos.com/projects/bosForms
 Description: A user-friendly straightforward form builder plugin.
-Version: 0.3.6
+Version: 0.3.7
 Author: Bart Bos
 Author URI: https://www.me.com
 License: GPL2
 */
 
 include plugin_dir_path(__FILE__) . 'controllers/update.php';
-
-$repository = 'bb829/myplugin';
-$token = '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'; // Replace with your personal access token
-
-$args = [
-    'headers' => [
-        'Authorization' => "token $token",
-    ],
-];
-
-$response = wp_remote_get("https://api.github.com/repos/$repository/releases/latest", $args);
-
-if (is_wp_error($response)) {
-    error_log($response->get_error_message());
-    return;
-}
-
-$body = wp_remote_retrieve_body($response);
-$release = json_decode($body);
-
-if (!isset($release->tag_name)) {
-    error_log("Unexpected API response: $body");
-    return;
-}
-
-$current_version = '0.3.6'; // Update accordingly
-
-if (version_compare($release->tag_name, $current_version, '>')) {
-    set_transient('myplugin_update', $release, DAY_IN_SECONDS);
-    error_log(print_r($release, true)); // Add this line
-}
-
-$plugin_slug = basename(dirname(__FILE__)) . '/myplugin.php'; // Use basename and dirname to get the correct slug
-
-add_filter('pre_set_site_transient_update_plugins', function ($transient) use ($plugin_slug) {
-    $plugin_main_file_path = WP_PLUGIN_DIR . '/' . $plugin_slug;
-    $release = get_transient('myplugin_update');
-
-    if ($release && isset($release->tag_name)) {
-        $plugin_data = get_plugin_data($plugin_main_file_path);
-
-        if (!empty($plugin_data)) {
-            $transient->response[$plugin_slug] = (object) [
-                'new_version' => $release->tag_name,
-                'package' => $release->zipball_url,
-                'url' => $plugin_data['PluginURI'],
-                'slug' => $plugin_slug,
-                'plugin_data' => $plugin_data,
-            ];
-        }
-    }
-
-    return $transient;
-});
-
-function force_check_updates() {
-    delete_site_transient('update_plugins');
-    do_action('wp_version_check'); // WordPress core, plugin, and theme update check
-}
-force_check_updates();
 
 function adminAssets()
 {
