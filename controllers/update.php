@@ -69,10 +69,12 @@ add_action('upgrader_process_complete', function ($upgrader_object, $options) {
 add_filter('upgrader_source_selection', function($source, $remote_source, $upgrader) {
     global $wp_filesystem;
 
-    $corrected_source = $remote_source . '/myplugin/';
-    if ($source !== $corrected_source) {
-        $wp_filesystem->move($source, $corrected_source);
-        return $corrected_source;
+    if (isset($upgrader->skin->plugin_info['Name']) && $upgrader->skin->plugin_info['Name'] == 'My Plugin') {
+        $corrected_source = trailingslashit($remote_source) . 'myplugin/';
+        if ($source !== $corrected_source) {
+            $wp_filesystem->move($source, $corrected_source);
+            return $corrected_source;
+        }
     }
 
     return $source;
