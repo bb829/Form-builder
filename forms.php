@@ -13,10 +13,10 @@ include plugin_dir_path(__FILE__) . 'controllers/update.php';
 
 function adminAssets()
 {
-    wp_enqueue_script('myplugin-backend', plugins_url('js/backend.bundle.js', __FILE__), array('jquery'), '1.0', 'defer');
-    wp_enqueue_style('myplugin-style', plugins_url('css/admin.css', __FILE__), array(), '1.0');
-    wp_enqueue_style('myplugin-bootstrap', plugins_url('css/bootstrap.min.css', __FILE__), array(), '1.0');
-    wp_enqueue_style('myplugin-fontAwesome', plugins_url('css/font-awesome/css/font-awesome.min.css', __FILE__), array(), '1.0');
+    wp_enqueue_script('forms-backend', plugins_url('assets/backend.bundle.js', __FILE__), array('jquery'), '1.0', 'defer');
+    wp_enqueue_style('forms-style', plugins_url('css/admin.css', __FILE__), array(), '1.0');
+    wp_enqueue_style('forms-bootstrap', plugins_url('css/bootstrap.min.css', __FILE__), array(), '1.0');
+    wp_enqueue_style('forms-fontAwesome', plugins_url('css/font-awesome/css/font-awesome.min.css', __FILE__), array(), '1.0');
 
 }
 
@@ -24,56 +24,49 @@ add_action('admin_enqueue_scripts', 'adminAssets');
 
 function assets()
 {
-    wp_enqueue_script('myplugin-main', plugins_url('js/main.bundle.js', __FILE__), false, false, 'defer');
-    wp_enqueue_script('myplugin-frontendJS', plugins_url('js/frontend.bundle.js', __FILE__), false, false, 'defer');
-    wp_enqueue_style('myplugin-frontend', plugins_url('css/frontend.css', __FILE__), array(), '1.0');
+    wp_enqueue_script('forms-main', plugins_url('assets/main.bundle.js', __FILE__), false, false, 'defer');
+    wp_enqueue_script('forms-frontendJS', plugins_url('assets/frontend.bundle.js', __FILE__), false, false, 'defer');
+    wp_enqueue_style('forms-frontend', plugins_url('css/frontend.css', __FILE__), array(), '1.0');
 
 }
 add_action('wp_enqueue_scripts', 'assets');
 
-function myplugin_add_admin_menu()
+function forms_add_admin_menu()
 {
     add_menu_page(
-        'My Plugin Page', // page title
-        'My Plugin', // menu title
-        'manage_options', // capability
-        'myplugin', // menu slug
-        'myplugin_admin_page', // function that handles the page content
-        'dashicons-admin-plugins', // icon url
-        20 // position
+        'Forms Page', 
+        'Forms', 
+        'manage_options', 
+        'forms', 
+        'forms_admin_page', 
+        'dashicons-admin-plugins', 
+        20 
     );
 
     add_submenu_page(
-        'myplugin', // parent slug
-        'Form Entries Page', // page title
-        'Form Entries', // menu title
-        'manage_options', // capability
-        'form_entries', // menu slug
-        'form_entries_admin_page' // function that handles the page content
+        'forms', 
+        'Form Entries Page', 
+        'Form Entries', 
+        'manage_options', 
+        'form_entries', 
+        'form_entries_admin_page' 
     );
 }
-add_action('admin_menu', 'myplugin_add_admin_menu');
+add_action('admin_menu', 'forms_add_admin_menu');
 
-// add_action('rest_api_init', function () {
-//     register_rest_route('myplugin/v1', '/payment', array(
-//         'methods' => 'POST',
-//         'callback' => 'myplugin_handle_payment',
-//     )
-//     );
-// });
 
 add_action('rest_api_init', function () {
     register_rest_route(
-        'myplugin/v1',
+        'forms/v1',
         '/payment-webhook',
         array(
             'methods' => 'POST',
-            'callback' => 'myplugin_handle_webhook',
+            'callback' => 'forms_handle_webhook',
         )
     );
 });
 
-function myplugin_handle_webhook(WP_REST_Request $request)
+function forms_handle_webhook(WP_REST_Request $request)
 {
     $paymentId = $request->get_param('id');
 
@@ -81,11 +74,11 @@ function myplugin_handle_webhook(WP_REST_Request $request)
     return new WP_REST_Response(null, 200);
 }
 
-function myplugin_admin_page()
+function forms_admin_page()
 {    echo '<div class="wrap">';
     echo '<h1>Create a form</h1>';
 
-    $forms = myplugin_get_forms();
+    $forms = forms_get_forms();
 
     ?>
 
@@ -113,7 +106,7 @@ function myplugin_admin_page()
 
                                     </div>
 
-                                    <div class="formShortcode"><span>[myplugin_form id="<?php echo $form->id; ?>"]</span></div>
+                                    <div class="formShortcode"><span>[forms_form id="<?php echo $form->id; ?>"]</span></div>
 
                                     <div class="formButtonWrapper">
 
@@ -204,7 +197,7 @@ function myplugin_admin_page()
 
 function form_entries_admin_page()
 {
-    $forms = myplugin_get_forms();
+    $forms = forms_get_forms();
 
     echo '<div class="wrap">';
     echo '<h1>Form Entries</h1>';
@@ -240,7 +233,7 @@ function form_entries_admin_page()
     echo '</div>';
 }
 
-function myplugin_activate()
+function forms_activate()
 {
     global $wpdb;
 
@@ -269,7 +262,7 @@ function myplugin_activate()
     dbDelta($sql);
 }
 
-register_activation_hook(__FILE__, 'myplugin_activate');
+register_activation_hook(__FILE__, 'forms_activate');
 
 function add_ajaxurl_cdata_to_front()
 {
@@ -281,7 +274,7 @@ function add_ajaxurl_cdata_to_front()
 }
 add_action('wp_head', 'add_ajaxurl_cdata_to_front', 1);
 
-function myplugin_save_data()
+function forms_save_data()
 {
     global $wpdb;
 
@@ -309,9 +302,9 @@ function myplugin_save_data()
 
     wp_die();
 }
-add_action('wp_ajax_myplugin_save_data', 'myplugin_save_data');
+add_action('wp_ajax_forms_save_data', 'forms_save_data');
 
-function myplugin_get_forms()
+function forms_get_forms()
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'bos_forms';
@@ -319,9 +312,9 @@ function myplugin_get_forms()
 
     return $forms;
 }
-add_action('wp_ajax_myplugin_get_forms', 'myplugin_get_forms');
+add_action('wp_ajax_forms_get_forms', 'forms_get_forms');
 
-function myplugin_form_entries() {
+function forms_form_entries() {
     global $wpdb;
     $form_entries_table_name = $wpdb->prefix . 'bos_forms_entries';
     $form_id = $_POST['formID'];
@@ -333,9 +326,9 @@ function myplugin_form_entries() {
         wp_send_json($form_entries);     
     }
 }
-add_action('wp_ajax_myplugin_form_entries', 'myplugin_form_entries');
+add_action('wp_ajax_forms_form_entries', 'forms_form_entries');
 
-function myplugin_refresh_forms()
+function forms_refresh_forms()
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'bos_forms';
@@ -352,7 +345,7 @@ function myplugin_refresh_forms()
                 <span>' . esc_html($form->form_title) . '</span>
             </div>
 
-            <div class="formShortcode"><span>[myplugin_form id="' . $form->id . '"]</span></div>
+            <div class="formShortcode"><span>[forms_form id="' . $form->id . '"]</span></div>
 
             <div class="formButtonWrapper">
                 <button class="editFormButton">Edit</button>
@@ -373,10 +366,10 @@ function myplugin_refresh_forms()
     wp_die();
 
 }
-add_action('wp_ajax_myplugin_refresh_forms', 'myplugin_refresh_forms');
+add_action('wp_ajax_forms_refresh_forms', 'forms_refresh_forms');
 
 
-function myplugin_edit_form()
+function forms_edit_form()
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'bos_forms';
@@ -439,9 +432,9 @@ function myplugin_edit_form()
 
     wp_die();
 }
-add_action('wp_ajax_myplugin_edit_form', 'myplugin_edit_form');
+add_action('wp_ajax_forms_edit_form', 'forms_edit_form');
 
-function myplugin_delete_form()
+function forms_delete_form()
 {
     global $wpdb;
 
@@ -453,9 +446,9 @@ function myplugin_delete_form()
 
     wp_die();
 }
-add_action('wp_ajax_myplugin_delete_form', 'myplugin_delete_form');
+add_action('wp_ajax_forms_delete_form', 'forms_delete_form');
 
-function myplugin_form_shortcode($atts)
+function forms_form_shortcode($atts)
 {
     global $wpdb;
 
@@ -465,7 +458,7 @@ function myplugin_form_shortcode($atts)
             'title' => ''
         ),
         $atts,
-        'myplugin_form'
+        'forms_form'
     );
 
     $table_name = $wpdb->prefix . 'bos_forms';
@@ -485,7 +478,7 @@ function myplugin_form_shortcode($atts)
     return $form_data;
 }
 
-add_shortcode('myplugin_form', 'myplugin_form_shortcode');
+add_shortcode('forms_form', 'forms_form_shortcode');
 
 add_action('phpmailer_init', 'my_phpmailer_init');
 function my_phpmailer_init($phpmailer)
@@ -493,7 +486,7 @@ function my_phpmailer_init($phpmailer)
     $phpmailer->Sender = 'noreply@secretsofhealing.nl';
 }
 
-function myplugin_send_form()
+function forms_send_form()
 {
     global $wpdb;
     $table_name = $wpdb->prefix . 'bos_forms';
@@ -552,8 +545,8 @@ function myplugin_send_form()
         }
         $message .= '</pre>';
 
-        $headers[] = 'From: Secrets of Healing <noreply@secretsofhealing.nl>';
-        $headers[] = 'Reply-To: Secrets of Healing <noreply@secretsofhealing.nl>';
+        $headers[] = 'From: Company Name <noreply@example.nl>';
+        $headers[] = 'Reply-To: Company Name <noreply@example.nl>';
         $headers[] = 'Content-Type: text/html; charset=UTF-8';
 
         wp_mail($admin_email, $subject, $message, $headers);
@@ -572,10 +565,10 @@ function myplugin_send_form()
 
     wp_die();
 }
-add_action('wp_ajax_myplugin_send_form', 'myplugin_send_form');
+add_action('wp_ajax_forms_send_form', 'forms_send_form');
 
 
-// function myplugin_get_price() {
+// function forms_get_price() {
 
 //     global $wpdb;
 //     $table_name = $wpdb->prefix . 'bos_forms';
@@ -586,4 +579,4 @@ add_action('wp_ajax_myplugin_send_form', 'myplugin_send_form');
 
 //     wp_die();
 // }
-// add_action('wp_ajax_myplugin_get_price', 'myplugin_get_price');
+// add_action('wp_ajax_forms_get_price', 'forms_get_price');

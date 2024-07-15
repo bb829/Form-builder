@@ -7,7 +7,7 @@ module.exports = {
     main: "./modules/main.js"
   },
   output: {
-    path: path.resolve(__dirname, "js"),
+    path: path.resolve(__dirname, "assets"),
     filename: "[name].bundle.js"
   }
 }

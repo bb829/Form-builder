@@ -9,11 +9,11 @@ export const pay = (price) => {
     },
     description: 'My first API payment',
     method: 'ideal',
-    redirectUrl: 'https://secretsofhealing.nl/',
-    webhookUrl: 'https://secretsofhealing.nl/wp-json/myplugin/v1/payment-webhook',
+    redirectUrl: 'https://companyurl.nl/',
+    webhookUrl: 'https://companyurl/wp-json/forms/v1/payment-webhook',
   };
 
-  axios.post('https://secretsofhealing.nl/wp-json/myplugin/v1/payment', data, {
+  axios.post('https://companyurl.nl/wp-json/forms/v1/payment', data, {
     headers: {
       'Content-Type': 'application/json'
     }

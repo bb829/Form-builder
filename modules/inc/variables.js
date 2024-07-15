@@ -1,17 +1,22 @@
-export const variables = {
- bosWrapper = document.querySelector('.bosWrapper');
- listWrapper = document.querySelector('.formListWrapper');
- formNewWrapper = document.querySelector('.formNewWrapper');
- newFormData = document.querySelector('.newFormData');
-
-
- addText = document.querySelector('.addText');
- createForm = document.querySelector('.createForm');
- formTitle = document.querySelector('.formTitle');
- editFormButton = document.querySelector('.editForm');
- saveEditFormButton = document.querySelector('.saveEditForm');
-
- inputOptions = document.querySelector('.inputOptions');
- inputOptionsSaveBtn = document.querySelector('.saveInputOptions');
- inputPlaceHolderOption = document.querySelector('.inputPlaceholderOption');
-}
+function selectElements(selectors) {
+    return selectors.reduce((acc, selector) => {
+      acc[selector] = document.querySelector(`.${selector}`);
+      return acc;
+    }, {});
+  }
+  
+  export const variables = selectElements([
+    'bosWrapper',
+    'listWrapper',
+    'formWrapper',
+    'formNewWrapper',
+    'formData',
+    'addText',
+    'createForm',
+    'formTitle',
+    'editFormButton',
+    'saveEditFormButton',
+    'inputOptions',
+    'inputOptionsSaveBtn',
+    'inputPlaceHolderOption',
+  ]);

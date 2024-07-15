@@ -86,7 +86,7 @@ export const submitForm = (event, id) => {
     if (errors.length == 0) {
         var formData = new FormData(form[0]);
 
-        formData.append('action', 'myplugin_send_form');
+        formData.append('action', 'forms_send_form');
         formData.append('formID', id);
 
         jQuery.ajax({

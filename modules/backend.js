@@ -1,6 +1,6 @@
-import { variables } from './inc/backend/variables.js';
-import { optionsViewModel } from './inc/backend/options.js';
-import { inputsViewModel } from './inc/backend/inputs.js';
+import { variables } from './inc/variables.js';
+import { optionsViewModel } from './inc/options.js';
+import { inputsViewModel } from './inc/inputs.js';
 
 if (variables.createForm) {
     variables.createForm.addEventListener('click', function () {
@@ -12,7 +12,7 @@ if (variables.createForm) {
 
 const refreshForm = () => {
     var data = {
-        'action': 'myplugin_refresh_forms'
+        'action': 'forms_refresh_forms'
     };
 
     jQuery.post(ajaxurl, data, function (response) {
@@ -23,7 +23,7 @@ const refreshForm = () => {
 const showFormEntries = (element) => {
     const id = jQuery(element).val();
     const data = {
-        'action': 'myplugin_form_entries',
+        'action': 'forms_form_entries',
         'formID': id
     };
 
@@ -68,7 +68,7 @@ const showFormEntries = (element) => {
 const deleteForm = (id) => {
 
     var data = {
-        'action': 'myplugin_delete_form',
+        'action': 'forms_delete_form',
         'formID': id
     };
 
@@ -212,7 +212,7 @@ jQuery(document).ready(function ($) {
         }
 
         var data = {
-            'action': 'myplugin_save_data',
+            'action': 'forms_save_data',
             'formID': formID,
             'formTitle': $(this).parents('.formButtonWrapper').siblings('.formTitle').find('.formTitleInput').val(),
             'formData': $(this).parents('.formButtonWrapper').siblings('.formContainer').find('.formData').html(),
@@ -233,7 +233,7 @@ jQuery(document).ready(function ($) {
         const formID = $(this).parents('.formItem').attr('id');
 
         var data = {
-            'action': 'myplugin_edit_form',
+            'action': 'forms_edit_form',
             'formID': formID
         };
 
