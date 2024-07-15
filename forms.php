@@ -462,7 +462,7 @@ function forms_form_shortcode($atts)
 
     $table_name = $wpdb->prefix . 'bos_forms';
 
-    $form_data .= '<form name="form-' . $atts['id'] . '"  method="post" action="" class="bosForm d-flex flex-column row-gap-3">';
+    $form_data = '<form name="form-' . $atts['id'] . '"  method="post" action="" class="bosForm d-flex flex-column row-gap-3">';
 
     if ($atts['title']) {
         $form_data .= '<h2 class="mb-0">' . $wpdb->get_var($wpdb->prepare("SELECT form_title FROM $table_name WHERE id = %d", $atts['id'])) . '</h2>';
@@ -482,7 +482,7 @@ add_shortcode('forms_form', 'forms_form_shortcode');
 add_action('phpmailer_init', 'my_phpmailer_init');
 function my_phpmailer_init($phpmailer)
 {
-    $phpmailer->Sender = 'noreply@secretsofhealing.nl';
+    $phpmailer->Sender = 'noreply@companyname.nl';
 }
 
 function forms_send_form()
@@ -504,9 +504,9 @@ function forms_send_form()
                     'currency' => 'EUR',
                     'value' => number_format($price, 2, '.', '')
                 ],
-                'description' => 'Secrets of Healing payment',
-                'redirectUrl' => 'https://secretsofhealing.nl',
-                'webhookUrl' => 'https://secretsofhealing.nl/betaling',
+                'description' => 'Test payment',
+                'redirectUrl' => 'https://example.nl',
+                'webhookUrl' => 'https://example.nl/payment',
                 'method' => 'ideal'
             ]),
             'headers' => [
