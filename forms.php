@@ -13,9 +13,9 @@ include plugin_dir_path(__FILE__) . 'controllers/update.php';
 function adminAssets()
 {
     wp_enqueue_script('forms-backend', plugins_url('assets/js/backend.bundle.js', __FILE__), array('jquery'), '1.0', 'defer');
-    wp_enqueue_style('forms-style', plugins_url('css/admin.css', __FILE__), array(), '1.0');
-    wp_enqueue_style('forms-bootstrap', plugins_url('css/bootstrap.min.css', __FILE__), array(), '1.0');
-    wp_enqueue_style('forms-fontAwesome', plugins_url('css/font-awesome/css/font-awesome.min.css', __FILE__), array(), '1.0');
+    wp_enqueue_style('forms-style', plugins_url('assets/css/admin.css', __FILE__), array(), '1.0');
+    wp_enqueue_style('forms-bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__), array(), '1.0');
+    wp_enqueue_style('forms-fontAwesome', plugins_url('assets/css/font-awesome/css/font-awesome.min.css', __FILE__), array(), '1.0');
 
 }
 
@@ -25,7 +25,7 @@ function assets()
 {
     wp_enqueue_script('forms-main', plugins_url('assets/js/main.bundle.js', __FILE__), false, false, 'defer');
     wp_enqueue_script('forms-frontendJS', plugins_url('assets/js/frontend.bundle.js', __FILE__), false, false, 'defer');
-    wp_enqueue_style('forms-frontend', plugins_url('css/frontend.css', __FILE__), array(), '1.0');
+    wp_enqueue_style('forms-frontend', plugins_url('assets/css/frontend.css', __FILE__), array(), '1.0');
 
 }
 add_action('wp_enqueue_scripts', 'assets');
