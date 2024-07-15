@@ -1,11 +1,10 @@
 <?php
 /*
-Plugin Name: My Plugin
-Plugin URI: https://bartbos.com/projects/bosForms
-Description: A user-friendly straightforward form builder plugin.
+Plugin Name: Form builder
+Plugin URI: https://bartbos.com/
+Description: An user-friendly straightforward form builder plugin.
 Version: 0.3.86
 Author: Bart Bos
-Author URI: https://www.me.com
 License: GPL2
 */
 
@@ -13,7 +12,7 @@ include plugin_dir_path(__FILE__) . 'controllers/update.php';
 
 function adminAssets()
 {
-    wp_enqueue_script('forms-backend', plugins_url('assets/backend.bundle.js', __FILE__), array('jquery'), '1.0', 'defer');
+    wp_enqueue_script('forms-backend', plugins_url('assets/js/backend.bundle.js', __FILE__), array('jquery'), '1.0', 'defer');
     wp_enqueue_style('forms-style', plugins_url('css/admin.css', __FILE__), array(), '1.0');
     wp_enqueue_style('forms-bootstrap', plugins_url('css/bootstrap.min.css', __FILE__), array(), '1.0');
     wp_enqueue_style('forms-fontAwesome', plugins_url('css/font-awesome/css/font-awesome.min.css', __FILE__), array(), '1.0');
@@ -24,8 +23,8 @@ add_action('admin_enqueue_scripts', 'adminAssets');
 
 function assets()
 {
-    wp_enqueue_script('forms-main', plugins_url('assets/main.bundle.js', __FILE__), false, false, 'defer');
-    wp_enqueue_script('forms-frontendJS', plugins_url('assets/frontend.bundle.js', __FILE__), false, false, 'defer');
+    wp_enqueue_script('forms-main', plugins_url('assets/js/main.bundle.js', __FILE__), false, false, 'defer');
+    wp_enqueue_script('forms-frontendJS', plugins_url('assets/js/frontend.bundle.js', __FILE__), false, false, 'defer');
     wp_enqueue_style('forms-frontend', plugins_url('css/frontend.css', __FILE__), array(), '1.0');
 
 }

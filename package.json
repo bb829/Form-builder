@@ -1,10 +1,10 @@
 {
-  "name": "soh",
-  "version": "1.0.0",
-  "description": "Secrets of Healing WordPress project",
+  "name": "Form-builder",
+  "version": "0.3.86",
+  "description": "Form Builder Plugin",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js --mode development --watch"
+    "dev": "webpack --config webpack.config.js --mode development --watch"
   },
   "author": "Bart Bos",
   "license": "ISC",
