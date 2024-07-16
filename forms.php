@@ -8,6 +8,7 @@ Author: Bart Bos
 License: GPL2
 */
 
+
 include plugin_dir_path(__FILE__) . 'controllers/update.php';
 
 function adminAssets()
@@ -238,6 +239,7 @@ function forms_activate()
 
     $table_name = $wpdb->prefix . 'bos_forms';
     $entries_table_name = $wpdb->prefix . 'bos_forms_entries';
+    $options_table_name = $wpdb->prefix . 'bos_forms_options';
 
     $charset_collate = $wpdb->get_charset_collate();
 
@@ -249,11 +251,9 @@ function forms_activate()
         PRIMARY KEY  (id)
     ) $charset_collate;
 
-    CREATE TABLE $entries_table_name (
+    CREATE TABLE $options_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
-        form_id mediumint(9) NOT NULL,
-        entry_data text NOT NULL,
-        FOREIGN KEY (form_id) REFERENCES $table_name(id),
+        github_token text NULL,
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
