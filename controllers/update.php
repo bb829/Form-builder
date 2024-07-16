@@ -2,8 +2,6 @@
 
 class pluginUpdate
 {
-
-    private $wpdb;
     public $table_options;
     public $token;
     public $repository;
