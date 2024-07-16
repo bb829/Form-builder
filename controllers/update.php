@@ -13,7 +13,7 @@ class pluginUpdate
     {
         global $wpdb;
         $this->wpdb = $wpdb;
-        $this->table_options = $wpdb->prefix . 'bos_forms_options';
+        $this->table_options = $wpdb->prefix . 'bos_forms_general_options';
         $this->token = $wpdb->get_var("SELECT github_token FROM {$this->table_options}");        
         $this->repository = 'bb829/form-builder';
         $this->current_version = '0.3.86';

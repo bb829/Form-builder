@@ -34,22 +34,22 @@ add_action('wp_enqueue_scripts', 'assets');
 function forms_add_admin_menu()
 {
     add_menu_page(
-        'Forms Page', 
-        'Forms', 
-        'manage_options', 
-        'forms', 
-        'forms_admin_page', 
-        'dashicons-admin-plugins', 
-        20 
+        'Forms Page',
+        'Forms',
+        'manage_options',
+        'forms',
+        'forms_admin_page',
+        'dashicons-admin-plugins',
+        20
     );
 
     add_submenu_page(
-        'forms', 
-        'Form Entries Page', 
-        'Form Entries', 
-        'manage_options', 
-        'form_entries', 
-        'form_entries_admin_page' 
+        'forms',
+        'Form Entries Page',
+        'Form Entries',
+        'manage_options',
+        'form_entries',
+        'form_entries_admin_page'
     );
 }
 add_action('admin_menu', 'forms_add_admin_menu');
@@ -75,7 +75,8 @@ function forms_handle_webhook(WP_REST_Request $request)
 }
 
 function forms_admin_page()
-{    echo '<div class="wrap">';
+{
+    echo '<div class="wrap">';
     echo '<h1>Create a form</h1>';
 
     $forms = forms_get_forms();
@@ -139,8 +140,10 @@ function forms_admin_page()
 
                         <h3>Form title</h3>
 
-                        <input class="formTitleInput w-100" type="text" id="formTitle" name="formTitle"
-                            placeholder="Form name" />
+                            <input class="formTitleInput w-100" type="text" id="formTitle" name="formTitle"
+                                placeholder="Form name" />
+
+                            <button class="editFormOptions mt-3" onclick="editFormOptions();">Edit form options</button>
 
                     </form>
 
@@ -201,35 +204,35 @@ function form_entries_admin_page()
 
     echo '<div class="wrap">';
     echo '<h1>Form Entries</h1>';
-?>
+    ?>
 
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="form-control d-flex flex-column">
-                <label for="form">Select a form</label>
-                <select name="form" id="form" class="select-form" onchange="showFormEntries(this);">
-                    <option value="0">Select a form</option>
-                    <?php
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-control d-flex flex-column">
+                    <label for="form">Select a form</label>
+                    <select name="form" id="form" class="select-form" onchange="showFormEntries(this);">
+                        <option value="0">Select a form</option>
+                        <?php
                         if ($forms) {
                             foreach ($forms as $form) {
                                 echo '<option name="form" value="' . $form->id . '">' . $form->form_title . '</option>';
                             }
                         }
-                    ?>
+                        ?>
 
-                </select>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="formEntries d-flex flex-column row-gap-2 mt-2"></div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="formEntries d-flex flex-column row-gap-2 mt-2"></div>
-        </div>
-    </div>
-</div>
 
-<?php
+    <?php
     echo '</div>';
 }
 
@@ -239,7 +242,8 @@ function forms_activate()
 
     $table_name = $wpdb->prefix . 'bos_forms';
     $entries_table_name = $wpdb->prefix . 'bos_forms_entries';
-    $options_table_name = $wpdb->prefix . 'bos_forms_options';
+    $general_options_table_name = $wpdb->prefix . 'bos_forms_general_options';
+    $form_options_table_name = $wpdb->prefix . 'bos_forms_form_options';
 
     $charset_collate = $wpdb->get_charset_collate();
 
@@ -251,16 +255,32 @@ function forms_activate()
         PRIMARY KEY  (id)
     ) $charset_collate;
 
-    CREATE TABLE $options_table_name (
+    CREATE TABLE $entries_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        form_id mediumint(9) NOT NULL,
+        entry_data text NOT NULL,
+        PRIMARY KEY  (id),
+        FOREIGN KEY (form_id) REFERENCES $table_name(id)
+    ) $charset_collate;
+
+    CREATE TABLE $general_options_table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         github_token text NULL,
         PRIMARY KEY  (id)
+    ) $charset_collate;
+    
+    CREATE TABLE $form_options_table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        form_id mediumint(9) NOT NULL,
+        option_name text NOT NULL,
+        option_value text NOT NULL,
+        PRIMARY KEY  (id),
+        FOREIGN KEY (form_id) REFERENCES $table_name(id)
     ) $charset_collate;";
 
     require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($sql);
 }
-
 register_activation_hook(__FILE__, 'forms_activate');
 
 function add_ajaxurl_cdata_to_front()
@@ -272,6 +292,34 @@ function add_ajaxurl_cdata_to_front()
     <?php
 }
 add_action('wp_head', 'add_ajaxurl_cdata_to_front', 1);
+
+function edit_form_options()
+{
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'bos_forms_form_options';
+    $formID = intval($_POST['formID']);
+    $options = $wpdb->get_row("SELECT * FROM $table_name WHERE form_id = $formID");
+
+        $output = '<div class="formOptionsWrapper d-flex flex-column row-gap-3 mt-4">
+    <h3>Form options</h3>
+    <div class="formOptions d-flex flex-column row-gap-3">
+        <div class="formOption d-flex justify-content-between">
+            <span>Option name</span>
+            <input type="text" name="optionName" value="' . ($options ? $options->option_name : '' ). '">
+        </div>
+        <div class="formOption d-flex justify-content-between">
+            <span>Option value</span>
+            <input type="text" name="optionValue" value="' . ($options ? $options->option_value : ''). '">
+        </div>
+    </div>
+    <button class="saveFormOptions">Save form options</button>';
+
+        echo $output;
+
+        wp_die();
+}
+add_action('wp_ajax_forms_edit_form_options', 'edit_form_options');
 
 function forms_save_data()
 {
@@ -313,16 +361,17 @@ function forms_get_forms()
 }
 add_action('wp_ajax_forms_get_forms', 'forms_get_forms');
 
-function forms_form_entries() {
+function forms_form_entries()
+{
     global $wpdb;
     $form_entries_table_name = $wpdb->prefix . 'bos_forms_entries';
     $form_id = $_POST['formID'];
     $form_entries = $wpdb->get_results("SELECT entry_data FROM $form_entries_table_name WHERE form_id = $form_id");
-    
-    if(!$form_entries) {
+
+    if (!$form_entries) {
         wp_send_json(['error' => 'No entries found']);
     } else {
-        wp_send_json($form_entries);     
+        wp_send_json($form_entries);
     }
 }
 add_action('wp_ajax_forms_form_entries', 'forms_form_entries');
@@ -366,7 +415,6 @@ function forms_refresh_forms()
 
 }
 add_action('wp_ajax_forms_refresh_forms', 'forms_refresh_forms');
-
 
 function forms_edit_form()
 {

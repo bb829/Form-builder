@@ -20,6 +20,17 @@ const refreshForm = () => {
     });
 }
 
+const editFormOptions = (ID) => {
+    data = {
+        'action': 'edit_form_options',
+        'formID': ID
+    }
+
+    $.post(ajaxurl, data, function (response) {
+        console.log(response);
+    });
+}
+
 const showFormEntries = (element) => {
     const id = jQuery(element).val();
     const data = {
@@ -253,5 +264,6 @@ jQuery(document).ready(function ($) {
 });
 
 window.showFormEntries = showFormEntries
+window.editFormOptions = editFormOptions
 window.clearForm = clearForm
 window.deleteForm = deleteForm
